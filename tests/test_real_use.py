@@ -1,11 +1,3 @@
-# mq4hemc
-Message Queue related Python library.
-
-## Example of usage
-Create a class inherited from `threading.Thread` with a message queue.
-Get and process the messages from that queue.
-Now we can send a message from other thread and wait until it is processed.
-```python
 import threading
 from mq4hemc import HemcQueue, HemcQueueSender, HemcMessage
 from dataclasses import dataclass, field
@@ -64,4 +56,3 @@ if __name__ == "__main__":
     service.stop()
     service.join()
 
-```
