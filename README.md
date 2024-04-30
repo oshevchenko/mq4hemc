@@ -58,8 +58,7 @@ if __name__ == "__main__":
     message.type = "test1"
     message.payload = {"key": "value"}
     # the return value of send_wait_reply() is the return value of HemcQueue.process_item_cb()
-    sender = service.get_sender()
-    status = sender.send_wait_reply(message)
+    status = service.get_sender().send_wait_reply(message)
     print(f"Status: {status}")
     service.stop()
     service.join()
