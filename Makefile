@@ -12,8 +12,12 @@ venv:
 
 build:
 	rm -rf dist
+	$(VENV_BIN_PATH)/python3 -m build
+
+build_old:
+	rm -rf dist
 	rm -f pyproject.toml
-	$(VENV_BIN_PATH)/python3 ./scripts/generate-pyproject.py
+	$(VENV_BIN_PATH)/python3 ./scripts/generate-pyproject.py pyproject.setup.toml.in
 	$(VENV_BIN_PATH)/python3 -m build
 
 utestpypi:
@@ -24,11 +28,9 @@ upypi:
 
 clean:
 	rm -rf dist
-	rm -f pyproject.toml
 
 veryclean:
 	rm -rf dist
-	rm -f pyproject.toml
 	rm -rf $(VENV_PATH)
 
 test:
