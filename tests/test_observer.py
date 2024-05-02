@@ -1,24 +1,24 @@
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import Mock
+
+# Force insert the path to the beginning of sys.path
+# to use the local package instead of the installed package.
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from mq4hemc import ObserverM, ObserverEventM
 
 """
 To run this test, run the following commands:
-
-python3 -m venv ./venv
+make venv
 source ./venv/bin/activate
-python3 tests/test_mq4hemc.py
+python3 tests/test_observer.py
 
 To run all unittests from the root directory, run the following command:
-python3 -m unittest discover -s tests
+make test
 
 To install the package locally, run the following command:
-
-python3 -m pip install .
-
+make install
 """
 
 class GNSSObserver(ObserverM):
@@ -35,7 +35,7 @@ class AnotherObserverEvent(ObserverEventM, observer_class=AnotherObserver):
 
 class TestObserverEventM(unittest.TestCase):
     def test_init(self):
-        mock_process_message = unittest.mock.Mock()
+        mock_process_message = Mock()
         mock_process_message.return_value = "success"
 
         gnss_observer = GNSSObserver()
@@ -46,7 +46,7 @@ class TestObserverEventM(unittest.TestCase):
         GNSSObserverEvent(msg_id, msg_data)
         # assert mock_process_message.called_once_with(msg_id, msg_data)
         print(f"gnss_observer._observers: {gnss_observer._observers}")
-        mock_process_message1 = unittest.mock.Mock()
+        mock_process_message1 = Mock()
         mock_process_message1.return_value = "success"
 
         another_observer = GNSSObserver()
