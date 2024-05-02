@@ -19,9 +19,9 @@ upload:
 
 clean:
 	rm -rf dist
-	rm pyproject.toml
+	rm -f pyproject.toml
 
 veryclean:
 	rm -rf dist
-	rm pyproject.toml
+	rm -f pyproject.toml
 	rm -rf venv
