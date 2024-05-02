@@ -1,88 +1,104 @@
 import threading
-from mq4hemc import HemcQueue, HemcQueueSender, HemcMessage
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
+from mq4hemc import HemcMessage, HemcService
 from dataclasses import dataclass, field
 import logging
 import time
+import unittest
+from unittest.mock import patch
 
 """
 To run this test, run the following commands:
-
 python3 -m venv ./venv
 source ./venv/bin/activate
-python3 -m pip install .
 python3 ./tests/test_real_use.py
 
+To run all unittests from the root directory, run the following command:
+python3 -m unittest discover -s tests
+
+To install the package locally, run the following command:
+python3 -m pip install .
 """
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger('test_mq4hemc')
 
 @dataclass
 class BigHemcMessage(HemcMessage):
     payload: dict = field(default_factory=dict)
 
+class TestHemcService(unittest.TestCase):
+    def test_send_wait_reply(self):
+        mock_process_message = unittest.mock.Mock()
+        mock_process_message.return_value = "__success__"
 
-class TestService(threading.Thread):
-    def start(self) -> None:
-        if self._running:
-            return
-        self._running = True
-        return super().start()
+        service = HemcService(mock_process_message)
+        service.start()
 
-    def stop(self):
-        self._running = False
-        message = HemcMessage()
-        message.type = "stop"
-        self.get_sender().send(message)
+        for i in range(3):
+            message = BigHemcMessage()
+            message.type = f"test{i}"
+            message.payload = {"key": f"value{i}"}
+            logger.info(f"Send {message} and do not wait for reply.")
+            status = service.send_async_msg(message)
 
-    def process_item(self, item: HemcMessage):
-        if item.type == "stop":
-            return
+
+        message = BigHemcMessage()
+        message.type = "test_sync"
+        message.payload = {"key": "value"}
+        logger.info(f"Now send {message} and wait for reply...")
+        status = service.send_sync_msg(message)
+        logger.info(f"Message {message} processed, reply: {status}")
+        service.stop()
+        service.join()
+        for call in mock_process_message.call_args_list:
+            print(f"Called with args: {call.args}, kwargs: {call.kwargs}")
+        assert mock_process_message.call_count == 4
+        call_1 = mock_process_message.call_args_list[0]
+        assert call_1[0][0].type == "test0"
+        assert call_1[0][0].payload == {"key": "value0"}
+        call_2 = mock_process_message.call_args_list[1]
+        assert call_2[0][0].type == "test1"
+        assert call_2[0][0].payload == {"key": "value1"}
+        call_3 = mock_process_message.call_args_list[2]
+        assert call_3[0][0].type == "test2"
+        assert call_3[0][0].payload == {"key": "value2"}
+        call_4 = mock_process_message.call_args_list[3]
+        assert call_4[0][0].type == "test_sync"
+        assert call_4[0][0].payload == {"key": "value"}
+        assert status == "__success__"
+
+
+if __name__ == "__main__":
+    unittest.main()
+    """
+    def process_cb(item: HemcMessage):
         if hasattr(item, 'payload') and item.payload is not None:
             # Simulate processing time
             time.sleep(1)
-        print(f"Processed message '{item.type}', payload: {item.payload}")
+        logger.info(f"Processed message '{item.type}', payload: {item.payload}")
         return item.type
 
-    def __init__(self):
-        # Initialize the message queue
-        self.message_queue = HemcQueue(process_item_cb = self.process_item)
-        self._running = False
-        threading.Thread.__init__(self)
-
-    def get_sender(self):
-        return HemcQueueSender(self.message_queue)
-
-    def run(self):
-        # The main execution loop of the thread.
-        while self._running:
-            # Get message from the queue and process it
-            self.message_queue.get_process()
-
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.WARNING)
-    logger = logging.getLogger('test_mq4hemc')
-    service = TestService()
+    service = HemcService(process_cb)
     service.start()
+
+    for i in range(3):
+        message = BigHemcMessage()
+        message.type = f"test{i}"
+        message.payload = {"key": f"value{i}"}
+        logger.info(f"Send {message} and do not wait for reply.")
+        status = service.send_async_msg(message)
+
     message = BigHemcMessage()
-    message.type = "test1"
+    message.type = "test_sync"
     message.payload = {"key": "value"}
-    # the return value of send_wait_reply() is the return value of HemcQueue.process_item_cb()
-    print(f"Send {message} and do not wait for reply.")
-    status = service.get_sender().send(message)
-    message = BigHemcMessage()
-    message.type = "test2"
-    message.payload = {"key": "value"}
-    print(f"Send {message} and do not wait for reply.")
-    status = service.get_sender().send(message)
-    message = BigHemcMessage()
-    message.type = "test3"
-    message.payload = {"key": "value"}
-    print(f"Send {message} and do not wait for reply.")
-    status = service.get_sender().send(message)
-    message = BigHemcMessage()
-    message.type = "test4"
-    message.payload = {"key": "value"}
-    print(f"Now send {message} and wait for reply...")
-    status = service.get_sender().send_wait_reply(message)
-    print(f"Reply: {status}")
+    logger.info(f"Now send {message} and wait for reply...")
+    status = service.send_sync_msg(message)
+    logger.info(f"Message {message} processed, reply: {status}")
     service.stop()
     service.join()
-
+    logger.info("Service stopped.")
+    """

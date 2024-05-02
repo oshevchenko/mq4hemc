@@ -1,4 +1,8 @@
 import threading
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+
 from mq4hemc import HemcQueue, HemcQueueSender, HemcMessage
 import unittest
 from unittest.mock import patch
@@ -10,8 +14,14 @@ To run this test, run the following commands:
 
 python3 -m venv ./venv
 source ./venv/bin/activate
-python3 -m pip install .
 python3 tests/test_mq4hemc.py
+
+To run all unittests from the root directory, run the following command:
+python3 -m unittest discover -s tests
+
+To install the package locally, run the following command:
+
+python3 -m pip install .
 
 """
 @dataclass
