@@ -1,4 +1,4 @@
-.PHONY: venv build upload clean veryclean test
+.PHONY: venv build utestpypi upypi clean veryclean test install
 
 VENV_PATH = venv
 VENV_BIN_PATH = $(VENV_PATH)/bin
@@ -16,8 +16,11 @@ build:
 	$(VENV_BIN_PATH)/python3 ./scripts/generate-pyproject.py
 	$(VENV_BIN_PATH)/python3 -m build
 
-upload:
+utestpypi:
 	$(VENV_BIN_PATH)/python3 -m twine upload --repository testpypi dist/*
+
+upypi:
+	$(VENV_BIN_PATH)/python3 -m twine upload dist/*
 
 clean:
 	rm -rf dist
