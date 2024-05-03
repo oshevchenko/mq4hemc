@@ -27,21 +27,21 @@ version_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'src/mq4h
 head_sha = os.popen('git rev-parse --short=7 HEAD').read().strip()
 tag = os.popen('git describe --abbrev=7 --dirty --always').read().strip()
 if tag:
-    add_date = False
+    dirty = False
+    out_of_tag = False
     if '-dirty' in tag:
         tag = tag.replace('-dirty', '')
-        add_date = True
-    if '-g' in tag:
-        tag = tag.replace('-g', '+g')
-        add_date = True
-    if '-' in tag:
-        tag = tag.replace('-', '.dev')
-        add_date = True
-    if add_date:
+        dirty = True
         # Get the current date
         date = datetime.datetime.now().strftime('.d%Y%m%d')
         # Append the date to the tag
         tag += date
+    if '-g' in tag:
+        tag = tag.replace('-g', '+g')
+        out_of_tag = True
+    if '-' in tag:
+        tag = tag.replace('-', '.dev')
+        out_of_tag = True
     tag_list = tag.split('.')
     # Convert the tag to a version tuple
     tag_tuple = []
@@ -50,7 +50,7 @@ if tag:
             tag_tuple.append(int(tag_list[i]))
         except ValueError:
             break
-    if add_date:
+    if dirty or out_of_tag:
         length = len(tag_tuple)
         if length > 0:
             tag_tuple[length - 1] += 1
