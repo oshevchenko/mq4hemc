@@ -1,3 +1,4 @@
+
 import io
 import os
 import re
@@ -29,13 +30,13 @@ tag = os.popen('git describe --abbrev=7 --dirty --always').read().strip()
 if tag:
     dirty = False
     out_of_tag = False
+    date = None
     if '-dirty' in tag:
         tag = tag.replace('-dirty', '')
         dirty = True
         # Get the current date
-        date = datetime.datetime.now().strftime('.d%Y%m%d')
-        # Append the date to the tag
-        tag += date
+        print(">>>>>>>>>>>dirty")
+        date = datetime.datetime.now().strftime('d%Y%m%d')
     if '-g' in tag:
         tag = tag.replace('-g', '+g')
         out_of_tag = True
@@ -54,18 +55,19 @@ if tag:
         length = len(tag_tuple)
         if length > 0:
             tag_tuple[length - 1] += 1
+
         match = re.search(r'\.dev(.*)\+', tag)
         if match:
             text = match.group(1)
         else:
             text = '0'
         tag_tuple.append('dev' + text)
-        match = re.search(r'\+g(.*)', tag)
-        if match:
-            text = match.group(1)
-        else:
-            text = head_sha
-        tag_tuple.append('g' + text)
+
+
+    if date:
+        tag_tuple.append('g' + head_sha + '.' + date)
+    else:
+        tag_tuple.append('g' + head_sha)
     # Write the text to the file
     with open(version_file, 'w') as f:
         f.write(VERSION_FILE_CONTENT)
