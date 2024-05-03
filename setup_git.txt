@@ -24,7 +24,6 @@ version_tuple: VERSION_TUPLE\n\n"""
 
 
 version_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'src/mq4hemc/_version.py'))
-head_sha = os.popen('git rev-parse --short=7 HEAD').read().strip()
 tag = os.popen('git describe --abbrev=7 --dirty --always').read().strip()
 if tag:
     dirty = False
@@ -61,6 +60,7 @@ if tag:
             offset = match.group(1)
         tag_tuple.append('dev' + offset)
 
+        head_sha = os.popen('git rev-parse --short=7 HEAD').read().strip()
         if dirty:
             tag_tuple.append('g' + head_sha + '.d' + date)
         else:
