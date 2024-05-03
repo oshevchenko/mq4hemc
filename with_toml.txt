@@ -1,0 +1,117 @@
+rm -rf dist
+venv/bin/python3 -m build
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=45
+  - setuptools_scm[toml]>=6.0
+  - wheel
+* Getting build dependencies for sdist...
+running egg_info
+writing src/mq4hemc.egg-info/PKG-INFO
+writing dependency_links to src/mq4hemc.egg-info/dependency_links.txt
+writing top-level names to src/mq4hemc.egg-info/top_level.txt
+adding license file 'LICENSE'
+writing manifest file 'src/mq4hemc.egg-info/SOURCES.txt'
+* Building sdist...
+running sdist
+running egg_info
+writing src/mq4hemc.egg-info/PKG-INFO
+writing dependency_links to src/mq4hemc.egg-info/dependency_links.txt
+writing top-level names to src/mq4hemc.egg-info/top_level.txt
+adding license file 'LICENSE'
+writing manifest file 'src/mq4hemc.egg-info/SOURCES.txt'
+running check
+creating mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+creating mq4hemc-0.0.10.dev0+g17bbc05.d20240503/scripts
+creating mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src
+creating mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc
+creating mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc.egg-info
+creating mq4hemc-0.0.10.dev0+g17bbc05.d20240503/tests
+copying files to mq4hemc-0.0.10.dev0+g17bbc05.d20240503...
+copying .gitignore -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+copying LICENSE -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+copying Makefile -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+copying README.md -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+copying poetry.lock -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+copying pyproject.toml -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+copying pyproject.toml.in -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+copying requirements.txt -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+copying setup.cfg -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+copying setup.py -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503
+copying scripts/generate-pyproject.py -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/scripts
+copying src/mq4hemc/__init__.py -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc
+copying src/mq4hemc/hemc_observer.py -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc
+copying src/mq4hemc/hemc_queue.py -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc
+copying src/mq4hemc/hemc_service.py -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc
+copying src/mq4hemc.egg-info/PKG-INFO -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc.egg-info
+copying src/mq4hemc.egg-info/SOURCES.txt -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc.egg-info
+copying src/mq4hemc.egg-info/dependency_links.txt -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc.egg-info
+copying src/mq4hemc.egg-info/top_level.txt -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc.egg-info
+copying tests/test_mq4hemc.py -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/tests
+copying tests/test_observer.py -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/tests
+copying tests/test_readme.py -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/tests
+copying tests/test_real_use.py -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/tests
+copying src/mq4hemc.egg-info/SOURCES.txt -> mq4hemc-0.0.10.dev0+g17bbc05.d20240503/src/mq4hemc.egg-info
+Writing mq4hemc-0.0.10.dev0+g17bbc05.d20240503/setup.cfg
+Creating tar archive
+removing 'mq4hemc-0.0.10.dev0+g17bbc05.d20240503' (and everything under it)
+* Building wheel from sdist
+* Creating isolated environment: venv+pip...
+* Installing packages in isolated environment:
+  - setuptools>=45
+  - setuptools_scm[toml]>=6.0
+  - wheel
+* Getting build dependencies for wheel...
+running egg_info
+writing src/mq4hemc.egg-info/PKG-INFO
+writing dependency_links to src/mq4hemc.egg-info/dependency_links.txt
+writing top-level names to src/mq4hemc.egg-info/top_level.txt
+reading manifest file 'src/mq4hemc.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/mq4hemc.egg-info/SOURCES.txt'
+* Installing packages in isolated environment:
+  - wheel
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build
+creating build/lib
+creating build/lib/mq4hemc
+copying src/mq4hemc/hemc_service.py -> build/lib/mq4hemc
+copying src/mq4hemc/hemc_observer.py -> build/lib/mq4hemc
+copying src/mq4hemc/__init__.py -> build/lib/mq4hemc
+copying src/mq4hemc/hemc_queue.py -> build/lib/mq4hemc
+installing to build/bdist.linux-x86_64/wheel
+running install
+running install_lib
+creating build/bdist.linux-x86_64
+creating build/bdist.linux-x86_64/wheel
+creating build/bdist.linux-x86_64/wheel/mq4hemc
+copying build/lib/mq4hemc/hemc_service.py -> build/bdist.linux-x86_64/wheel/mq4hemc
+copying build/lib/mq4hemc/hemc_observer.py -> build/bdist.linux-x86_64/wheel/mq4hemc
+copying build/lib/mq4hemc/__init__.py -> build/bdist.linux-x86_64/wheel/mq4hemc
+copying build/lib/mq4hemc/hemc_queue.py -> build/bdist.linux-x86_64/wheel/mq4hemc
+running install_egg_info
+running egg_info
+writing src/mq4hemc.egg-info/PKG-INFO
+writing dependency_links to src/mq4hemc.egg-info/dependency_links.txt
+writing top-level names to src/mq4hemc.egg-info/top_level.txt
+reading manifest file 'src/mq4hemc.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file 'src/mq4hemc.egg-info/SOURCES.txt'
+Copying src/mq4hemc.egg-info to build/bdist.linux-x86_64/wheel/mq4hemc-0.0.10.dev0+g17bbc05.d20240503-py3.8.egg-info
+running install_scripts
+creating build/bdist.linux-x86_64/wheel/mq4hemc-0.0.10.dev0+g17bbc05.d20240503.dist-info/WHEEL
+creating '/home/oshevchenko/workspace/python_tutorial/mq4hemc/dist/.tmp-np3ax0tt/mq4hemc-0.0.10.dev0+g17bbc05.d20240503-py3-none-any.whl' and adding 'build/bdist.linux-x86_64/wheel' to it
+adding 'mq4hemc/__init__.py'
+adding 'mq4hemc/hemc_observer.py'
+adding 'mq4hemc/hemc_queue.py'
+adding 'mq4hemc/hemc_service.py'
+adding 'mq4hemc-0.0.10.dev0+g17bbc05.d20240503.dist-info/LICENSE'
+adding 'mq4hemc-0.0.10.dev0+g17bbc05.d20240503.dist-info/METADATA'
+adding 'mq4hemc-0.0.10.dev0+g17bbc05.d20240503.dist-info/WHEEL'
+adding 'mq4hemc-0.0.10.dev0+g17bbc05.d20240503.dist-info/top_level.txt'
+adding 'mq4hemc-0.0.10.dev0+g17bbc05.d20240503.dist-info/RECORD'
+removing build/bdist.linux-x86_64/wheel
+Successfully built mq4hemc-0.0.10.dev0+g17bbc05.d20240503.tar.gz and mq4hemc-0.0.10.dev0+g17bbc05.d20240503-py3-none-any.whl
