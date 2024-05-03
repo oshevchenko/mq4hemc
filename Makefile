@@ -12,6 +12,7 @@ venv:
 
 build:
 	rm -rf dist
+	rm -f setup.py
 	$(VENV_BIN_PATH)/python3 -m build
 
 build_old:
