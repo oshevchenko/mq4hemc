@@ -1,11 +1,10 @@
 import io
 import os
 import re
+
 """
 This is setup.py to be used from bitbake recipe.
-1. If package is downloaded from pypi, the version is taken from the package: src/mq4hemc/_version.py.
-2. If package is downloaded from git, the version is taken from the latest tag.
-
+If package is downloaded from pypi, the version is taken from the package: src/mq4hemc/_version.py.
 """
 
 version="0.0.1"
@@ -15,14 +14,6 @@ if os.path.isfile(version_file):
         match = re.search(r"__version__ = version = '(.*)'", f.read())
         if match:
             version = match.group(1)
-else:
-    tag = os.popen('git describe --abbrev=4 --always').read().strip()
-    if tag:
-        tag = tag.replace('-g', '+g')
-        tag = tag.replace('-', '.dev')
-        with open(version_file, 'w') as f:
-            f.write(f"__version__ = version = '{tag}'\n")
-        version = tag
 
 from setuptools import setup
 setup(
