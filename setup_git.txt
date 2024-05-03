@@ -63,9 +63,9 @@ if tag:
         tag_tuple.append('dev' + text)
 
 
-    if date:
+    if dirty:
         tag_tuple.append('g' + head_sha + '.' + date)
-    else:
+    elif out_of_tag:
         tag_tuple.append('g' + head_sha)
     # Write the text to the file
     with open(version_file, 'w') as f:
