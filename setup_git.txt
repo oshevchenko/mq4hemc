@@ -1,3 +1,4 @@
+import io
 import os
 import re
 import datetime
@@ -21,7 +22,7 @@ __version__: str
 __version_tuple__: VERSION_TUPLE
 version_tuple: VERSION_TUPLE\n\n"""
 
-version="0.0.1"
+
 version_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'src/mq4hemc/_version.py'))
 head_sha = os.popen('git rev-parse --short=7 HEAD').read().strip()
 tag = os.popen('git describe --abbrev=7 --dirty --always').read().strip()
@@ -72,7 +73,13 @@ if tag:
         f.write(f"__version__ = version = '{tag_str}'\n")
         tuple_str = str(tag_tuple).replace('[', '(').replace(']', ')')
         f.write(f"__version_tuple__ = version_tuple = {tuple_str}\n")
-    version = tag_str
+
+version="0.0.1"
+if os.path.isfile(version_file):
+    with io.open(version_file, "rt", encoding="utf8") as f:
+        match = re.search(r"__version__ = version = '(.*)'", f.read())
+        if match:
+            version = match.group(1)
 
 from setuptools import setup
 setup(
