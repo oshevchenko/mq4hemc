@@ -24,9 +24,13 @@ version_tuple: VERSION_TUPLE\n\n"""
 
 version="0.0.1"
 version_file = os.path.abspath(os.path.join(os.path.dirname(__file__), 'src/mq4hemc/_version.py'))
-tag = os.popen('git describe --abbrev=7 --always').read().strip()
+head_sha = os.popen('git rev-parse --short=7 HEAD').read().strip()
+tag = os.popen('git describe --abbrev=7 --dirty --always').read().strip()
 if tag:
     add_date = False
+    if '-dirty' in tag:
+        tag = tag.replace('-dirty', '')
+        add_date = True
     if '-g' in tag:
         tag = tag.replace('-g', '+g')
         add_date = True
@@ -53,11 +57,15 @@ if tag:
         match = re.search(r'\.dev(.*)\+', tag)
         if match:
             text = match.group(1)
-            tag_tuple.append('dev' + text)
+        else:
+            text = '0'
+        tag_tuple.append('dev' + text)
         match = re.search(r'\+g(.*)', tag)
         if match:
             text = match.group(1)
-            tag_tuple.append('g' + text)
+        else:
+            text = head_sha
+        tag_tuple.append('g' + text)
     # Write the text to the file
     with open(version_file, 'w') as f:
         f.write(VERSION_FILE_CONTENT)
