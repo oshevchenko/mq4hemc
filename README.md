@@ -10,7 +10,7 @@ It has a thread-safe methods to add messages to the queue synchronously
 
 `HemcMessage` - a dataclass to inherit from to create a custom message.
 
-## Example of usage
+## Usage
 Define a custom class for the messages:
 ```py
 @dataclass
@@ -77,4 +77,42 @@ This code will produce the following output. Please pay attention to the **test_
 2024-05-02 14:39:32 - test_mq4hemc - INFO - Processed message 'test_sync'
 2024-05-02 14:39:32 - test_mq4hemc - INFO - Message test_sync processed, reply: test_sync
 2024-05-02 14:39:32 - test_mq4hemc - INFO - Service stopped.
+```
+## Yocto recipes
+Use the following bitbake recipes `python3-mq4hemc_0.0.20.bb` to install **mq4hemc** package:
+
+### From github.com:
+```
+DESCRIPTION = "Message Queue Based Service"
+HOMEPAGE = "https://github.com/oshevchenko/mq4hemc"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=bd6d2057bbfc3f9442bc4dfd9a7c4580"
+
+SRC_URI = "git://github.com/oshevchenko/mq4hemc.git;protocol=https"
+SRCREV = "75a10cfbf3e16c6a2491b2295d4d4d63f4a952f1"
+
+S = "${WORKDIR}/git"
+
+inherit setuptools3
+
+do_configure:prepend() {
+    cp ${S}/setup_git.txt ${S}/setup.py
+}
+```
+### From PyPi
+```
+DESCRIPTION = "Message Queue Based Service"
+HOMEPAGE = "https://github.com/oshevchenko/mq4hemc"
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=bd6d2057bbfc3f9442bc4dfd9a7c4580"
+
+PYPI_PACKAGE = "mq4hemc"
+
+SRC_URI[md5sum] = "5317fbdc5cc857b70f622005730ef66f"
+
+inherit pypi setuptools3
+
+do_configure:prepend() {
+    cp ${S}/setup_pypi.txt ${S}/setup.py
+}
 ```
