@@ -1,7 +1,9 @@
 from abc import ABC
 from threading import RLock
+from mq4hemc import HemcQueue, HemcQueueSender, HemcMessage
 
-class ObserverM(ABC):
+
+class HemcObserver(ABC):
     def __init_subclass__(cls):
         super().__init_subclass__()
         cls._observers = []
@@ -12,31 +14,45 @@ class ObserverM(ABC):
             self._observers.append(self)
         self._observables = {}
 
+    def get_observables(self):
+        with self._mutex:
+            observables = self._observables.copy()
+        return observables
+
     def observe(self, msg_id, callback):
-        self._observables[msg_id] = callback
+        if not callable(callback):
+            raise ValueError("callback must be a callable function or method")
+        with self._mutex:
+            self._observables[msg_id] = callback
+
+    @classmethod
+    def fire(cls, msg: HemcMessage):
+        with cls._mutex:
+            observers = cls._observers.copy()
+        for observer in observers:
+            observables = observer.get_observables()
+            if msg.type in observables:
+                callback = observables[msg.type]
+                callback(msg)
 
     @classmethod
     def clear(cls):
-        with cls._mutex:
-            for observer in cls._observers:
-                observer._observables = {}
-            cls._observers = []
-        pass
+        for observer in cls._observers:
+            observer.observables.clear()
+        cls._observers.clear()
 
-class ObserverEventM(ABC):
+
+class HemcObserverEvent(ABC):
     def __init_subclass__(cls, observer_class):
         super().__init_subclass__()
+        if not issubclass(observer_class, HemcObserver):
+            raise TypeError("observer_class must be a subclass of HemcObserver")
         cls._observer_class = observer_class
 
-    def __init__(self, msg_id, msg_data, autofire=True):
-        self.msg_id = msg_id
-        self.msg_data = msg_data
+    def __init__(self, msg: HemcMessage, autofire=True):
+        self.msg = msg
         if autofire:
             self.fire()
 
     def fire(self):
-        with self._observer_class._mutex:
-            observers = self._observer_class._observers.copy()
-        for observer in observers:
-            if self.msg_id in observer._observables:
-                observer._observables[self.msg_id](self.msg_id, self.msg_data)
+        self._observer_class.fire(self.msg)

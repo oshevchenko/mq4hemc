@@ -6,7 +6,7 @@ from unittest.mock import Mock
 # Force insert the path to the beginning of sys.path
 # to use the local package instead of the installed package.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from mq4hemc import ObserverM, ObserverEventM
+from mq4hemc import HemcObserver, HemcObserverEvent, HemcMessage
 
 """
 To run this test, run the following commands:
@@ -21,16 +21,16 @@ To install the package locally, run the following command:
 make install
 """
 
-class GNSSObserver(ObserverM):
+class GNSSObserver(HemcObserver):
     pass
 
-class GNSSObserverEvent(ObserverEventM, observer_class=GNSSObserver):
+class GNSSObserverEvent(HemcObserverEvent, observer_class=GNSSObserver):
     pass
 
-class AnotherObserver(ObserverM):
+class AnotherObserver(HemcObserver):
     pass
 
-class AnotherObserverEvent(ObserverEventM, observer_class=AnotherObserver):
+class AnotherObserverEvent(HemcObserverEvent, observer_class=AnotherObserver):
     pass
 
 class TestObserverEventM(unittest.TestCase):
@@ -41,9 +41,9 @@ class TestObserverEventM(unittest.TestCase):
         gnss_observer = GNSSObserver()
         gnss_observer.observe("test_id", mock_process_message)
 
-        msg_id = "test_id"
-        msg_data = "test_data"
-        GNSSObserverEvent(msg_id, msg_data)
+        msg = HemcMessage()
+        msg.type = "test_id"
+        GNSSObserverEvent(msg)
         # assert mock_process_message.called_once_with(msg_id, msg_data)
         print(f"gnss_observer._observers: {gnss_observer._observers}")
         mock_process_message1 = Mock()
@@ -51,18 +51,18 @@ class TestObserverEventM(unittest.TestCase):
 
         another_observer = GNSSObserver()
         another_observer.observe("test_id", mock_process_message1)
-        msg_id = "test_id"
-        msg_data = "test_data"
-        # AnotherObserverEvent(msg_id, msg_data)
-        GNSSObserverEvent(msg_id, msg_data)
+        msg = HemcMessage()
+        msg.type = "test_id"
+        GNSSObserverEvent(msg)
 
         assert 2 == mock_process_message.call_count
         for call in mock_process_message.call_args_list:
             args, kwargs = call
-            assert args == ('test_id', 'test_data')
+            print(f"Args: {args}, Kwargs: {kwargs}")
+            assert args == (HemcMessage(type='test_id', callback=None),)
             # print(f"Args: {args}, Kwargs: {kwargs}")
         assert 1 == mock_process_message1.call_count
-        assert mock_process_message1.called_once_with(msg_id, msg_data)
+        assert mock_process_message1.called_once_with((HemcMessage(type='test_id', callback=None),))
 
         print(f"gnss_observer._observers: {gnss_observer._observers}")
         print(f"another_observer._observers: {another_observer._observers}")
