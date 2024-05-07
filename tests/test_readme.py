@@ -10,7 +10,7 @@ from unittest.mock import Mock
 # Force insert the path to the beginning of sys.path
 # to use the local package instead of the installed package.
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-from mq4hemc import HemcMessage, HemcService, HemcObserver, HemcObserverEvent
+from mq4hemc import HemcMessage, HemcService, HemcObserver, HemcObserverEvent, HemcTick
 
 import threading
 
@@ -23,8 +23,6 @@ python3 tests/test_readme.py
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S',
                     level=logging.INFO)
 logger = logging.getLogger('test_mq4hemc')
-
-global timer
 
 
 class TickObserver(HemcObserver):
@@ -58,7 +56,6 @@ def process_tick(item: HemcMessage):
 
 
 def timer_tick():
-    global timer
     print("Timer executed!")
     msg = BigHemcMessage()
     msg.type = "tick"
@@ -68,12 +65,9 @@ def timer_tick():
     TickObserverEvent(msg, ret_dict)
     print(f"ret_dict: {ret_dict}")
 
-    timer = threading.Timer(1.0, timer_tick)
-    timer.start()
-
 
 if __name__ == "__main__":
-
+    tick_sender = HemcTick(5, timer_tick)
     # Create a timer that waits for 5 seconds, then executes timer_tick
     tick_observer = TickObserver(name="main_tick_observer")
     tick_observer.observe("tick", process_tick)
@@ -83,7 +77,7 @@ if __name__ == "__main__":
 
     # Start the timer
     service.start()
-    timer_tick()
+    tick_sender.start()
 
     for i in range(3):
         message = BigHemcMessage()
