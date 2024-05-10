@@ -1,6 +1,6 @@
 .PHONY: venv build utestpypi upypi clean veryclean test install
 
-VENV_PATH = venv
+VENV_PATH ?= venv
 VENV_BIN_PATH = $(VENV_PATH)/bin
 
 venv:
