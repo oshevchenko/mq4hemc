@@ -1,5 +1,5 @@
 import threading
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import queue
 from typing import Any
 
@@ -16,6 +16,9 @@ class HemcMessage:
     type: str = 'default_msg_type'
     callback: callable = None
 
+@dataclass
+class HemcPayloadMessage(HemcMessage):
+    payload: dict = field(default_factory=dict)
 
 class HemcQueue(queue.Queue):
     """

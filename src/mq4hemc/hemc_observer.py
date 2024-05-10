@@ -35,7 +35,6 @@ class HemcObserver(ABC):
             observables = observer.get_observables_copy()
             if msg.type in observables:
                 callback = observables[msg.type]
-                print(f"observer.name: {observer.name}")
                 cls._ret_dict[observer.name] = callback(msg)
         if ret_dict is not None:
             ret_dict.update(cls._ret_dict)
